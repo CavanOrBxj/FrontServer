@@ -1,0 +1,13 @@
+E:\GitHub\MQ+log4net框架\MQandLog4Net\MQandLog4Net\obj\x86\Debug\MQandLog4Net.csproj.GenerateResource.cache
+E:\GitHub\MQ+log4net框架\MQandLog4Net\MQandLog4Net\obj\x86\Debug\MQandLog4Net.csproj.CoreCompileInputs.cache
+E:\GitHub\MQ+log4net框架\MQandLog4Net\MQandLog4Net\bin\x86\Debug\Apache.NMS.ActiveMQ.dll
+E:\GitHub\MQ+log4net框架\MQandLog4Net\MQandLog4Net\bin\x86\Debug\Apache.NMS.dll
+E:\GitHub\MQ+log4net框架\MQandLog4Net\MQandLog4Net\bin\x86\Debug\log4net.dll
+E:\GitHub\MQ+log4net框架\MQandLog4Net\MQandLog4Net\obj\x86\Debug\MQandLog4Net.csproj.CopyComplete
+E:\GitHub\MQ+log4net框架\MQandLog4Net\MQandLog4Net\bin\x86\Debug\MQandLog4Net.exe.config
+E:\GitHub\MQ+log4net框架\MQandLog4Net\MQandLog4Net\bin\x86\Debug\MQandLog4Net.exe
+E:\GitHub\MQ+log4net框架\MQandLog4Net\MQandLog4Net\bin\x86\Debug\MQandLog4Net.pdb
+E:\GitHub\MQ+log4net框架\MQandLog4Net\MQandLog4Net\obj\x86\Debug\MQandLog4Net.MainForm.resources
+E:\GitHub\MQ+log4net框架\MQandLog4Net\MQandLog4Net\obj\x86\Debug\MQandLog4Net.Properties.Resources.resources
+E:\GitHub\MQ+log4net框架\MQandLog4Net\MQandLog4Net\obj\x86\Debug\MQandLog4Net.exe
+E:\GitHub\MQ+log4net框架\MQandLog4Net\MQandLog4Net\obj\x86\Debug\MQandLog4Net.pdb

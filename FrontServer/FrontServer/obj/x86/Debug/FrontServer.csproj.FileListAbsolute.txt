@@ -1,0 +1,16 @@
+E:\GitHub\FrontServer\FrontServer\FrontServer\obj\x86\Debug\FrontServer.csprojAssemblyReference.cache
+E:\GitHub\FrontServer\FrontServer\FrontServer\obj\x86\Debug\FrontServer.MainForm.resources
+E:\GitHub\FrontServer\FrontServer\FrontServer\obj\x86\Debug\MQandLog4Net.Properties.Resources.resources
+E:\GitHub\FrontServer\FrontServer\FrontServer\obj\x86\Debug\FrontServer.csproj.GenerateResource.cache
+E:\GitHub\FrontServer\FrontServer\FrontServer\obj\x86\Debug\FrontServer.csproj.CoreCompileInputs.cache
+E:\GitHub\FrontServer\FrontServer\FrontServer\obj\x86\Debug\MQandLog4Net.exe
+E:\GitHub\FrontServer\FrontServer\FrontServer\obj\x86\Debug\MQandLog4Net.pdb
+E:\GitHub\FrontServer\FrontServer\FrontServer\bin\x86\Debug\MQandLog4Net.exe.config
+E:\GitHub\FrontServer\FrontServer\FrontServer\bin\x86\Debug\MQandLog4Net.exe
+E:\GitHub\FrontServer\FrontServer\FrontServer\bin\x86\Debug\MQandLog4Net.pdb
+E:\GitHub\FrontServer\FrontServer\FrontServer\bin\x86\Debug\Apache.NMS.ActiveMQ.dll
+E:\GitHub\FrontServer\FrontServer\FrontServer\bin\x86\Debug\Apache.NMS.dll
+E:\GitHub\FrontServer\FrontServer\FrontServer\bin\x86\Debug\EBMTableLib.dll
+E:\GitHub\FrontServer\FrontServer\FrontServer\bin\x86\Debug\log4net.dll
+E:\GitHub\FrontServer\FrontServer\FrontServer\bin\x86\Debug\Newtonsoft.Json.dll
+E:\GitHub\FrontServer\FrontServer\FrontServer\obj\x86\Debug\FrontServer.csproj.CopyComplete
