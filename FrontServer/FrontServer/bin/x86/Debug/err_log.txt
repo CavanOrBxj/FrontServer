@@ -1,0 +1,10 @@
+<2017-11-23 16:49:40> SD_PCI_Initialize [TCP_ConnectPCI], Connect Server Failed. [127.0.0.1:8888] ret = 0xf0000007.
+<2019-04-13 18:08:36> SD_PCI_Initialize [TCP_ConnectPCI], Connect Server Failed. [127.0.0.1:8888] ret = 0xf0000007.
+<2019-04-13 18:08:47> SD_PCI_Initialize [TCP_ConnectPCI], Connect Server Failed. [127.0.0.1:8888] ret = 0xf0000007.
+<2019-04-13 18:11:00> SD_PCI_Initialize [TCP_ConnectPCI], Connect Server Failed. [192.168.19.9:8888] ret = 0xf0000007.
+<2019-04-13 18:11:10> SD_PCI_Initialize [TCP_ConnectPCI], Connect Server Failed. [192.168.19.9:8888] ret = 0xf0000007.
+<2019-04-13 20:33:50> pci_read_file [DEV_client_file_process] error. read file error. ret = 0xf000000d.
+<2019-04-13 20:33:50> PCI_ReadFile [crypto_read_file] error. ret = 0xf000000d.
+<2019-04-13 20:34:43> pci_read_file [DEV_client_file_process] error. read file error. ret = 0xf000000b.
+<2019-04-13 20:34:43> PCI_ReadFile [crypto_read_file] error. ret = 0xf000000b.
+<2019-04-14 10:09:10> SD_PCI_Initialize [TCP_ConnectPCI], Connect Server Failed. [192.168.100.244:8800] ret = 0xf0000007.

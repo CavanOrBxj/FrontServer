@@ -1,4 +1,5 @@
 ﻿using EBSignature;
+using FrontServer.StructClass;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -14,6 +15,13 @@ namespace FrontServer
 {
     public class FrontServerDataHelper : IDisposable
     {
+
+        public delegate void MyDelegate(object data);
+
+        public static event MyDelegate MyEvent; //注意须关键字 static  
+        public static event MyDelegate JumpEvent; //注意须关键字 static
+
+
         public byte[] HandleReceiveData(byte[] receivedata, int datalenth, IPEndPoint ipport)
         {
             List<byte> dataList = new List<byte>();
@@ -25,41 +33,36 @@ namespace FrontServer
             {
                 byte[] recdata = dataList.ToArray().Take(datalenth).ToArray();
 
-                if (recdata[0] == 0x50)//判断属于来自平台的合法数据头
+                if (recdata[0] == 0x50)//判断属于来自县适配器的合法数据头
                 {
 
                     #region 测试打印 接收到的数据
-                    string str = "";
+                    string str = DateTime.Now.ToString()+"->";
                     foreach (var item in recdata)
                     {
-                        str += " " + item.ToString("X2");
+                        str += item.ToString("X2")+" ";
                     }
+                    PrintData tcprecvdata = new PrintData();
+                    tcprecvdata.source = "4";
+                    tcprecvdata.MessageInfo = str;
+                    FrontServerDataHelper.MyEvent(tcprecvdata);
                     LogHelper.WriteLog(typeof(FrontServerDataHelper), str,"Info");
                     #endregion
                     //CRC校验 
                     if (CheckCRC32(recdata))
                     {
-                        //if (Verifysignature(recdata))
-                        //{
-
-                        //    byte[] data = HandleRealData(recdata);
-                        //    if (data.Length > 0)
-                        //    {
-                        //        return data;
-                        //    }
-
-                        //}
-                        //else
-                        //{
-                        //    LogHelper.WriteLog(typeof(DataHelper), "验签失败");
-                        //    return null;
-                        //}
-
-                        //验签暂时关闭  20180510
-                        byte[] data = HandleRealData(recdata, ipport);
-                        if (data.Length > 0)
+                         if(true) // if (VerifysignatureDeXin(recdata))   注意：对接的德芯设备返回包不带签名
                         {
-                            return data;
+                            byte[] data = HandleRealData(recdata, ipport);
+                            if (data.Length > 0)
+                            {
+                                return data;
+                            }
+                        }
+                        else
+                        {
+                            LogHelper.WriteLog(typeof(FrontServerDataHelper), "验签失败","Info");
+                            return null;
                         }
                     }
                     else
@@ -78,10 +81,42 @@ namespace FrontServer
             {
                 return null;
             }
-
             return null;
+        }
+
+
+        //public bool Verifysignature(byte[] input)
+        //{
+        //    bool flag = false;
+        //    byte[] length = input.Skip(5).Take(4).ToArray();
+
+        //    int datalenth = GetDataLenth(length)+9;
+        //    byte[] pdatabuf = input.Take(datalenth).ToArray();
+        //    byte[] signature = input.Skip(input.Length - 64 - 4).Take(64).ToArray();
+        //    int random = GetDataLenth(input.Skip(input.Length - 64 - 4 - 6 - 4).Take(4).ToArray());
+
+        //    flag = SingletonInfo.GetInstance().InlayCA.EbMsgSignVerify(pdatabuf, pdatabuf.Length,ref random, signature);
+        //    return flag;
+
+        //}
+
+        /// <summary>
+        /// 特殊接口  验证德芯数据  不带UTC时间
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public bool VerifysignatureDeXin(byte[] input)
+        {
+            bool flag = false;
+            byte[] length = input.Skip(5).Take(4).ToArray();
+            int datalenth = GetDataLenth(length) + 9;
+            byte[] pdatabuf = input.Take(datalenth).ToArray();
+            byte[] signature = input.Skip(input.Length - 64 - 4 - 6).Take(70).ToArray();
+            flag = SingletonInfo.GetInstance().InlayCA.EbMsgSignVerifyWithoutUTC(pdatabuf, pdatabuf.Length, signature);
+            return flag;
 
         }
+
 
         /// <summary>
         /// CRC判断
@@ -119,10 +154,13 @@ namespace FrontServer
             byte[] datareal = receivedata.Skip(9).Take(datalenth).ToArray();
             switch (protocol_type)
             {
-                case 0x18:
-                  //  backdata = BuildBackData(TaskBeginUpdataDeal(datareal), 0x22);
+                case 0x18://任务开始上报
+                    backdata = BuildBackData(TaskBeginUpdataDeal(datareal), 0x22);
                     break;
-                case 0x20:
+                case 0x19://任务结束上报
+                    backdata = BuildBackData(TaskOverDeal(datareal), 0x21);
+                    break;
+                case 0x20://收到心跳
                     backdata = BuildBackData(HeartBeatDeal(datareal, ipport), 0x21);      
                     break;
 
@@ -225,10 +263,10 @@ namespace FrontServer
 
 
 
-            string str = "";
+            string str = DateTime.Now.ToString()+"->";
             foreach (byte item in backdatabyte)
             {
-                str += " " + item.ToString("X2");
+                str +=  item.ToString("X2")+" ";
             }
 
             LogHelper.WriteLog(typeof(FrontServerDataHelper), str,"Info");
@@ -243,40 +281,20 @@ namespace FrontServer
         public byte[] BuildBackData(byte[] inputdata,byte commandtype)
         {
             List<byte> backdatabyte = new List<byte>();
-            backdatabyte = GetHeadbyte(0x50, commandtype, 2, inputdata.Length);
+            backdatabyte = GetHeadbyte(0x49, commandtype, 2, inputdata.Length);
             backdatabyte.AddRange(inputdata);
-            //bool cou = false;
-            //int lastlen = 0;
-            //byte[] signatureAll = signature(backdatabyte.ToArray(), ref cou, ref lastlen);
-
-            //byte[] utc;
-            //byte[] SN;
-            //byte[] Signaturedata;
-
-            //if (cou)
-            //{
-            //    utc = signatureAll.Skip(4 + 3 + 32 + lastlen).Take(4).ToArray();
-            //    SN = signatureAll.Skip(4 + 3 + 32 + lastlen + 4).Take(6).ToArray();
-            //    Signaturedata = signatureAll.Skip(4 + 3 + lastlen + 4 + 6).Take(64).ToArray();
-            //}
-            //else
-            //{
-            //    utc = signatureAll.Skip(4 + 3 + lastlen).Take(4).ToArray();
-            //    SN = signatureAll.Skip(4 + 3 + lastlen + 4).Take(6).ToArray();
-            //    Signaturedata = signatureAll.Skip(4 + 3 + lastlen + 4 + 6).Take(64).ToArray();
-
-            //}
-
-
-            // int signaturelen = utc.Length + SN.Length + Signaturedata.Length;
+           
 
             //暂时不用签名 所以对应数值赋值0
             int signaturelen = 4 + 6 + 64;
-            byte[] utc = new byte[4];
-            byte[] SN = new byte[6];
+            TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            int random = (Int32)Convert.ToInt64(ts.TotalSeconds);
+            byte[] utc = Int32toByte(random);
+            byte[] SN = new byte[6] { 0, 0, 0, 0, 0, 1 };//一号证书
             byte[] Signaturedata = new byte[64];
 
-
+            int CertIndex = SingletonInfo.GetInstance().DicCertIndex2CerSN["000000000001"];
+            SingletonInfo.GetInstance().InlayCA.EbMsgSignWithoutUTC(backdatabyte.ToArray(), backdatabyte.Count, ref Signaturedata, CertIndex);
 
 
 
@@ -287,15 +305,15 @@ namespace FrontServer
 
             byte[] crcdata = CRC32.GetCRC32(backdatabyte.ToArray());
             backdatabyte.AddRange(crcdata);
-
-
-
-            string str = "";
+            string str = DateTime.Now.ToString()+"->";
             foreach (byte item in backdatabyte)
             {
-                str += " " + item.ToString("X2");
+                str += item.ToString("X2")+" ";
             }
-
+            PrintData obj = new PrintData();
+            obj.source = "3";
+            obj.MessageInfo = str;
+            FrontServerDataHelper.MyEvent(obj);//传到界面打印
             LogHelper.WriteLog(typeof(FrontServerDataHelper), str,"Info");
             return backdatabyte.ToArray();
         }
@@ -322,7 +340,6 @@ namespace FrontServer
             Array.Reverse(bData);
             headbyte.AddRange(bData);
             return headbyte;
-
         }
 
 
@@ -332,8 +349,8 @@ namespace FrontServer
             int front_code_length=(int)input.Take(1).ToArray()[0];
             tmp.front_code = bcd2Str(input.Skip(1).Take(front_code_length).ToArray()); //此时 front_code为终端的物理码
             tmp.front_State = input.Skip(1 + front_code_length).Take(1).ToArray()[0].ToString();
-            tmp.auxiliarydata = input.Skip(2 + front_code_length).Take(1).ToArray()[0].ToString();
-            tmp.connection_time = Byte2DatetimeStr(input.Skip(3 + front_code_length).Take(4).ToArray());
+            //tmp.auxiliarydata = input.Skip(2 + front_code_length).Take(1).ToArray()[0].ToString();
+           // tmp.connection_time = Byte2DatetimeStr(input.Skip(3 + front_code_length).Take(4).ToArray());
             if (SingletonInfo.GetInstance().PhysicalCode2IPDic.ContainsKey(tmp.front_code))
             {
                 SingletonInfo.GetInstance().PhysicalCode2IPDic.Remove(tmp.front_code);
@@ -350,6 +367,60 @@ namespace FrontServer
             #endregion
         }
 
+
+
+        public byte[] TaskBeginUpdataDeal(byte[] input)
+        {
+            //TaskUploadBegin tmp = new TaskUploadBegin();
+            //tmp.program_resource = input.Skip(30).Take(1).ToArray()[0].ToString();
+
+            //if (tmp.program_resource == "3" || tmp.program_resource == "4")
+            //{
+            //    tmp.ebm_class = input.Skip(31).Take(1).ToArray()[0].ToString();
+            //}
+            //SingletonInfo.GetInstance().IsTaskUpload = true;
+            //string sourcetmp= bcd2Str(input.Skip(57).Take(12).ToArray());
+            //SingletonInfo.GetInstance().PhoneBindResourceCode = sourcetmp;
+            //#region 线程通知县平台  或者事件触发
+            //ParamObject eventparam = new ParamObject();
+            //eventparam.commandcode = 0x18;
+            //eventparam.paramobj = tmp;
+            //FrontServerDataHelper.JumpEvent(eventparam);   //测试注释   20190318
+            //#endregion
+
+
+            #region  构建回复数据
+            List<byte> rebackdata = new List<byte>();
+            rebackdata.Add(0);//0表示成功 1表示失败
+            byte[] reserved = new byte[6];
+            rebackdata.AddRange(reserved);
+            return rebackdata.ToArray();
+            #endregion
+        }
+
+
+        public byte[] TaskOverDeal(byte[] input)
+        {
+            //TaskUploadOver tmp = new TaskUploadOver();
+
+            //#region 线程通知县平台  或者事件触发
+            //ParamObject eventparam = new ParamObject();
+            //eventparam.commandcode = 0x19;
+            //eventparam.paramobj = tmp;
+            //FrontServerDataHelper.JumpEvent(eventparam);   //测试注释   20190318
+            //#endregion
+
+
+            #region  构建回复数据
+            List<byte> rebackdata = new List<byte>();
+            int BackCode = 0;
+            int BackData_Len = 0;
+
+            rebackdata.AddRange(Int32toByte(BackCode));
+            rebackdata.AddRange(Int32toByte(BackData_Len));
+            return rebackdata.ToArray();
+            #endregion
+        }
 
         #region  格式转换
 

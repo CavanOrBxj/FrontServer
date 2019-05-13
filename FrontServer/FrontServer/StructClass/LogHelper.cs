@@ -56,8 +56,6 @@ namespace FrontServer
                     log.Warn(msg);
                     break;
             }
-
-            log.Error(msg);
         }
 
         #endregion

@@ -34,6 +34,9 @@ namespace FrontServer
         public int input_channel_id { get; set; }
 
         public List<int> OutPut_Channel_IdList;
+
+        //图南私有  PID
+        public string S_elementary_PID { get; set; }
     }
 
 
@@ -43,11 +46,11 @@ namespace FrontServer
 
         public string coded_character_set { get; set; }
 
-        public int text_length { get; set; }
+       // public int text_length { get; set; }
 
         public string text_char { get; set; }
 
-        public int agency_name_length { get; set; }
+     //   public int agency_name_length { get; set; }
 
         public string agency_name_char { get; set; }
 
@@ -57,7 +60,7 @@ namespace FrontServer
     public class AuxiliaryInfo
     {
         public int auxiliary_data_type { get; set; }
-        public int auxiliary_data_length { get; set; }
+       // public int auxiliary_data_length { get; set; }
         public string auxiliary_data { get; set; }
 
     }
@@ -96,7 +99,6 @@ namespace FrontServer
     public class GeneralResponse
     {
         public string return_code { get; set; }
-        public int return_data_length { get; set; }
         public string return_data { get; set; }
 
     }
@@ -114,28 +116,9 @@ namespace FrontServer
     }
 
 
-    /// <summary>
-    /// 白名单更新
-    /// </summary>
-    public class WhiteListUpdate
-    {
-        public List<WhiteListInfo> white_list;
+  
 
-    }
-
-    public class WhiteListInfo
-    {
-        public string oper_type { get; set; }
-
-        public string phone_number { get; set; }
-
-        public string user_name { get; set; }
-
-        public string permission_type { get; set; }
-
-        public List<string> permission_area_codeList;
-
-    }
+   
 
     public class WhiteListRecord
     {
@@ -192,11 +175,6 @@ namespace FrontServer
     {
         public string front_code { get; set; }
         public string front_State { get; set; }
-        /// <summary>
-        /// 辅助数据  此项由包能胜于20180717 15：00添加
-        /// </summary>
-        public string auxiliarydata { get; set; }
-        public string connection_time { get; set; }
     }
   
     #endregion
@@ -256,22 +234,7 @@ namespace FrontServer
     
     }
 
-    /// <summary>
-    /// 县平台切换通道
-    /// </summary>
-    public class CountyplatformChangechannel
-    {   //输入通道号 1-8
-        public string inputchannel { get; set; }
-        //乡镇适配器物理码  后改为ip和端口
-        public string PhysicalCode { get; set; }
-
-        /// <summary>
-        /// 资源码
-        /// </summary>
-        public string ResourceCode { get; set; }
-
-
-    }
+    
 
 
     public class OperatorData
@@ -282,5 +245,267 @@ namespace FrontServer
         public object Data { get; set; }
 
     }
+
+    /// <summary>
+    /// 时钟校准
+    /// </summary>
+    public class ClockCalibration
+    {
+        public string time { get; set; }
+
+    }
+
+
+    public class ResourceCodeInfo
+    {
+        public string physical_address { get; set; }
+
+        public string logic_address { get; set; }
+
+    }
+
+
+    public class RebackSet
+    {
+        public string reback_type { get; set; }
+
+        public string reback_address { get; set; }
+
+        public string resource_code_type { get; set; }
+
+        public List<string> resource_codeList;//资源码信息  默认所有资源码都是同一长度
+
+    }
+
+
+    public class StatusInquiry
+    {
+        public string reback_type { get; set; }
+
+        public string reback_address { get; set; }
+
+        public string resource_code_type { get; set; }
+
+        public List<string> resource_codeList;//资源码信息  默认所有资源码都是同一长度
+
+        public List<string> query_code_codeList;//查询信息类型码  默认所有资源码都是同一长度
+
+    }
+
+
+    public class RebackPeriod
+    {
+        public string reback_cycle { get; set; }
+
+        public string resource_code_type { get; set; }
+
+        public List<string> resource_codeList;//资源码信息  默认所有资源码都是同一长度
+
+    }
+
+    /// <summary>
+    /// huican
+    /// </summary>
+    public class RebackParam
+    {
+        public string reback_type { get; set; }
+
+        public string reback_cycle { get; set; }
+
+        public string reback_address;
+
+    }
+
+    /// <summary>
+    /// 输出通道查询
+    /// </summary>
+    public class OutChannelInquire
+    {
+        public string front_code { get; set; }
+
+        /// <summary>
+        /// 传输通道号：取 0 时不做为查询条件
+        /// </summary>
+        public string output_channel_id { get; set; }
+
+        /// <summary>
+        /// 根据传输通道状态查询 0：查询全部 1：查询空闲；2：查询占用 3：查询故障
+        /// </summary>
+        public string output_channel_state;
+
+    }
+
+
+    /// <summary>
+    /// 输出通道查询回复
+    /// </summary>
+    public class OutChannelResponse
+    {
+        public string front_code { get; set; }
+
+        public List<OutChannel> OutChannelList;
+
+    }
+
+    /// <summary>
+    /// 输出通道信息
+    /// </summary>
+    public class OutChannel
+    {
+        public string output_channel_id { get; set; }
+        public string out_channel_type { get; set; }
+
+        public int sub_channel_number { get; set; }
+
+        public List<sub_channel_Info_1> sub_channel_Info_1List;
+
+        public List<sub_channel_Info_2or3> sub_channel_Info_2or3List;
+
+    }
+
+
+    /// <summary>
+    /// out_channel_type==1时的sub_channel_Info
+    /// </summary>
+    public class sub_channel_Info_1
+    {
+        public string sub_channel_freq { get; set; }
+        public string output_channel_state { get; set; }
+
+        public string ebm_id { get; set; }//output_channel_state==2
+    }
+
+
+    /// <summary>
+    /// out_channel_type==2或3时的sub_channel_Info
+    /// </summary>
+    public class sub_channel_Info_2or3
+    {
+        public string original_network_id { get; set; }
+        public string details_channel_transport_stream_id { get; set; }
+
+        public string details_channel_program_number { get; set; }
+
+        public string details_channel_pcr_pid { get; set; }
+
+        public int stream_number { get; set; }
+
+        public List<stream> streamList;
+
+        public string output_channel_state { get; set; }
+
+        public string ebm_id { get; set; }
+    }
+
+
+    public class stream
+    {
+        public string stream_type { get; set; }//1字节
+        public string elementary_pid { get; set; }//2字节
+    }
+
+    /// <summary>
+    /// 输入通道查询
+    /// </summary>
+    public class InputChannelInquire
+    {
+        public string front_code { get; set; }
+
+        /// <summary>
+        /// 传输通道号：取 0 时不做为查询条件
+        /// </summary>
+        public string input_channel_id { get; set; }
+
+        /// <summary>
+        ///根据输入通道状态查询 0：查询全部 1：查询空闲；2：查询占用 3：查询故障
+        /// </summary>
+        public string input_channel_state;
+
+    }
+
+    /// <summary>
+    /// 输出通道查询回复
+    /// </summary>
+    public class InputChannelResponse
+    {
+        public string front_code { get; set; }
+
+        public List<InputChannel> InputChannelList;
+
+    }
+
+    public class InputChannel
+    {
+        public string input_channel_id { get; set; }
+
+        public string input_channel_name { get; set; }
+
+        public string input_channel_group { get; set; }
+
+        public string input_channel_state { get; set; }
+    }
+
+
+
+    public class RDSScanFreInfo
+    {
+        public List<RDSScanFre> RDSScanFreList { get; set; }
+
+        public List<string> coverag_resource_List { get; set; }
+    }
+
+    public class RDSScanFre
+    {
+        /// <summary>
+        /// 频点序号
+        /// </summary>
+        public string freqCount { get; set; }
+        /// <summary>
+        /// 频点优先级
+        /// </summary>
+        public string freqPri { get; set; }
+        /// <summary>
+        /// 频率
+        /// </summary>
+        public string freq { get; set; }
+    }
+
+    //public class PowerAmplifierSwitch
+    //{
+    //    /// <summary>
+    //    /// 1：表示关闭喇叭2：表示打开喇叭
+    //    /// </summary>
+    //    public string switch_option { get; set; }
+
+    //    public string resource_code_type { get; set; }
+
+    //    public List<string> resource_codeList;//资源码信息  默认所有资源码都是同一长度
+    //}
+
+    public class WhiteListInfo
+    {
+        public List<WhiteList> WhiteListsList { get; set; }
+    }
+
+    public class WhiteList
+    {
+        public string oper_type { get; set; }
+
+        public string phone_number { get; set; }
+
+        public string user_name { get; set; }
+
+        public string permission_type { get; set; }
+
+        public List<string> permission_area_codeList;//资源码信息  默认所有资源码都是同一长度
+
+    }
+
+    
+
+  
+
+
+
 
 }

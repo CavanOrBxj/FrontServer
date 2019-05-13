@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using EBSignature;
 using System.Net;
+using FrontServer.StructClass;
+using FrontServer.Utils;
+using System;
 
 namespace FrontServer
 {
@@ -32,11 +35,11 @@ namespace FrontServer
         public bool IsGXProtocol;//表明是否是广西协议
 
         public bool IsUseAddCert;//是否使用增加的证书
-        public string Cert_SN;//增加的证书编号
-        public string PriKey;//增加证书的私钥
-        public string PubKey;//增加证书的公钥
+        //public string Cert_SN;//增加的证书编号
+        //public string PriKey;//增加证书的私钥
+        //public string PubKey;//增加证书的公钥
 
-        public int Cert_Index;//证书索引
+    //    public int Cert_Index;//证书索引
         public string LocalHost;//本机IP
        
         public string ebm_id_front;
@@ -49,6 +52,31 @@ namespace FrontServer
 
 
         public int TimerInterval;//定时器执行周期
+
+        public List<IndexItemIData> IndexItemList;
+
+        public string HttpServer;
+        public HttpHelper post;
+
+        public string Interstitial_prlId;//插播prlID;
+        public string pid;//httpPlayID
+
+        public bool IsTaskUpload;//任务上报标志位
+        public string PhoneBindResourceCode;//
+
+        public Dictionary<string, int> DicCertIndex2CerSN;//增加的证书索引与证书编号的字典
+
+        public string SQLServerIP;
+        public string SQLDataBaseName;
+        public string SQLUserName;
+        public string SQLPassword;
+
+        public string FrontCode;//主动发送给县适配器的FrontCode;
+
+        public bool SignatureType;//签名方式  true表示软签名  false表示硬件签名
+
+        public USBE usb;// = new USBE();
+        public IntPtr phDeviceHandle;// = (IntPtr)1;
 
         private SingletonInfo()                                                                 
         {
@@ -65,10 +93,6 @@ namespace FrontServer
             IsGXProtocol = false;
 
             IsUseAddCert = false;
-            Cert_SN = "";
-            PriKey = "";
-            PubKey = "";
-            Cert_Index = 0;
             LocalHost = "";
             ebm_id_front = "";
             ebm_id_behind = "";
@@ -77,6 +101,28 @@ namespace FrontServer
 
             tcpsend = new TcpHelper();
             TimerInterval = 0;
+            IndexItemList = new List<IndexItemIData>();
+            HttpServer = "";
+            post = new HttpHelper();
+
+            Interstitial_prlId = "";
+            pid = "";
+            IsTaskUpload = false;
+            PhoneBindResourceCode = "";
+
+            DicCertIndex2CerSN = new Dictionary<string, int>();
+
+            SQLPassword = "";
+            SQLDataBaseName = "";
+            SQLUserName = "";
+            SQLPassword = "";
+            FrontCode = "";
+
+            SignatureType = true;
+
+            usb = new USBE();
+            phDeviceHandle = (IntPtr)1;
+
         }
 
         public static SingletonInfo GetInstance()
